@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Start Screen</title>
+		<meta name="viewport" content="width=device-width" />
+		<style type="text/css">
+			body
+			{
+				overflow: hidden;
+			}
+			div#top_bar
+			{
+				background: rgba(0, 128, 255, 0.5);
+				position: absolute;
+				left: 0px;
+				right: 0px;
+				top: 0px;
+				height: 64px;
+			}
+			div#content
+			{
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				right: 0px;
+				bottom: 0px;
+				background: rgba(0, 0, 0, 0.25);
+			}
+			div#bottom_bar
+			{
+				background: rgba(0, 192, 128, 0.5);
+				position: absolute;
+				left: 0px;
+				right: 0px;
+				bottom: 0px;
+				height: 48px;
+			}
+		</style>
+		<script type="text/javascript">
+			/* <![CDATA[ */
+			window.Main = function ()
+			{
+				//
+			}
+			
+			document.addEventListener(
+				'readystatechange',
+				function ()
+				{
+					switch (document.readyState) {
+						case 'loading':     // document is started loading
+							break
+						case 'interactive': // document is loaded but not subresources
+							window.Main()
+							break
+						case 'complete':    // document and it's resources are loaded completely
+							break
+					}
+				}
+			)
+			/* ]]> */
+		</script>
+	</head>
+	<body>
+		<div id="page">
+			<div id="top_bar">
+				
+			</div>
+			<div id="content">
+				
+			</div>
+			<div id="bottom_bar">
+				
+			</div>
+		</div>
+	</body>
+</html>
