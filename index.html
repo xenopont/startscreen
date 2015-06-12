@@ -41,7 +41,41 @@
 			/* <![CDATA[ */
 			window.Main = function ()
 			{
-				//
+                document.addEventListener('contextmenu', function (e) {
+                    e.preventDefault()
+                })
+
+				var addElement = function (objId, children, events) {
+                    var result = document.getElementById(objId)
+                    if (arguments.length > 1) {
+                        for (var key in children) {
+                            if (children.hasOwnProperty(key)) {
+                                result[key] = children[key]
+                            }
+                        }
+                        if (arguments.length > 2) {
+                            for (var e in events) {
+                                if (events.hasOwnProperty(e)) {
+                                    result.addEventListener(e, events[e])
+                                    console.log(events[e])
+                                }
+                            }
+                        }
+                    }
+                    return result
+                }
+
+                window.Page = addElement('page', {
+                    TopBar: addElement('top_bar', {}, {
+                        'click' : function (e) {
+                            console.log('TopBar context menu')
+                        }
+                    }),
+                    Content: addElement('content'),
+                    BottomBar: addElement('bottom_bar')
+                })
+
+                console.log(window.Page.TopBar)
 			}
 			
 			document.addEventListener(
