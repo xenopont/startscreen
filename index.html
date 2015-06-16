@@ -168,13 +168,13 @@
             ul.menu_popup
             {
                 opacity: 1;
-                animation-duration: 0.75s;
+                animation-duration: 0.25s;
                 animation-name: menu_popup;
             }
             ul.menu_hide
             {
                 opacity: 0;
-                animation-duration: 0.25s;
+                animation-duration: 0.13s;
                 animation-name: menu_hide;
             }
             /* ]]> */
@@ -207,7 +207,9 @@
                 {
                     search: function (searchString)
                     {
-                        window.location.href = 'http://yandex.ru/yandsearch?text=' + searchString
+                        if (searchString !== '') {
+                            window.location.href = 'http://yandex.ru/yandsearch?text=' + searchString
+                        }
                     }
                 }
 
@@ -222,7 +224,7 @@
                             menuObj.className = 'menu_hide'
                             setTimeout(function () {
                                 menuObj.style.display = 'none'
-                            }, 250)
+                            }, 130)
                         }
                     },
                     popup: function (menuObj, x, y)
@@ -246,13 +248,19 @@
                 window.Page = addElement('page', {
                     TopBar: addElement('top_bar', {
                         Items: addElement('top_bar_items', {
-                            SearchKeyword: addElement('search_keyword'),
+                            SearchKeyword: addElement('search_keyword', {}, {
+                                'paste': function (e)
+                                {
+                                    setTimeout(function () {
+                                        window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
+                                    }, 10)
+                                }
+                            }),
                             SearchButton: addElement('search_button', {}, {
                                 'click': function (e)
                                 {
-                                    if (window.Page.TopBar.Items.SearchKeyword.value !== '') {
-                                        window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
-                                    }
+                                    window.Page.TopBar.Items.SearchKeyword.focus()
+                                    window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
                                 }
                             })
                         })
