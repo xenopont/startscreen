@@ -5,6 +5,7 @@
 		<title>Start Screen</title>
 		<meta name="viewport" content="width=device-width" />
 		<style type="text/css">
+            /* <![CDATA[ */
 			body
 			{
 				overflow: hidden;
@@ -141,6 +142,41 @@
                     {
                         background: transparent;
                     }
+            @keyframes menu_popup
+            {
+                from
+                {
+                    opacity: 0;
+                }
+                to
+                {
+                    opacity: 1;
+                }
+            }
+            @keyframes menu_hide
+            {
+                from
+                {
+                    opacity: 1;
+                }
+                to
+                {
+                    opacity: 0;
+                }
+            }
+            ul.menu_popup
+            {
+                opacity: 1;
+                animation-duration: 0.75s;
+                animation-name: menu_popup;
+            }
+            ul.menu_hide
+            {
+                opacity: 0;
+                animation-duration: 0.25s;
+                animation-name: menu_hide;
+            }
+            /* ]]> */
 		</style>
 		<script type="text/javascript">
 			/* <![CDATA[ */
@@ -174,12 +210,15 @@
                     hide: function (menuObj)
                     {
                         if (menuObj !== null) {
-                            menuObj.style.display = 'none'
+                            menuObj.className = 'menu_hide'
+                            setTimeout(function () {
+                                menuObj.style.display = 'none'
+                            }, 250)
                         }
                     },
                     popup: function (menuObj, x, y)
                     {
-                        if (window.Menus.ActiveMenu !== null) {
+                        if (window.Menus.ActiveMenu !== null && window.Menus.ActiveMenu !== menuObj) {
                             window.Menus.hide(window.Menus.ActiveMenu)
                             window.Menus.ActiveMenu = null
                         }
@@ -191,6 +230,7 @@
                         menuObj.style.right = fitsLeft ? 'auto' : (window.Page.offsetWidth - x) + 'px'
                         menuObj.style.bottom = fitsTop ? 'auto' : (window.Page.offsetHeight - y) + 'px'
                         window.Menus.ActiveMenu = menuObj
+                        menuObj.className = 'menu_popup'
                     }
                 })
 
