@@ -97,7 +97,7 @@
                     border: 1px solid rgba(0, 0, 0, 0.35);
                     border-bottom-color: rgba(0, 0, 0, 0.45);
                     border-right-color: rgba(0, 0, 0, 0.45);
-                    border-radius: 3px;
+                    border-radius: 0px;
                     min-width: 150px;
                     position: absolute;
                     background: rgba(255, 255, 255, 0.85);
@@ -200,15 +200,24 @@
                             SearchKeyword: addElement('search_keyword'),
                             SearchButton: addElement('search_button')
                         })
+                    }, {
+                        'contextmenu': function (e)
+                        {
+                            window.Menus.hide(window.Menus.ActiveMenu)
+                        }
                     }),
                     Content: addElement('content', {}, {
                         'contextmenu': function (e)
                         {
                             window.Menus.popup(window.Menus.ContentMenu, e.clientX, e.clientY)
-                            //e.preventDefault()
                         }
                     }),
-                    BottomBar: addElement('bottom_bar')
+                    BottomBar: addElement('bottom_bar', {}, {
+                        'contextmenu': function (e)
+                        {
+                            window.Menus.hide(window.Menus.ActiveMenu)
+                        }
+                    })
                 })
 
                 document.addEventListener('contextmenu', function (e) {
@@ -219,6 +228,10 @@
                     if (e.button === 0) {
                         window.Menus.hide(window.Menus.ActiveMenu)
                     }
+                })
+
+                document.addEventListener('blur', function (e) {
+                    window.Menus.hide(window.Menus.ActiveMenu)
                 })
 			}
 			
