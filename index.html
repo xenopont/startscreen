@@ -11,6 +11,14 @@
                 min-height: 450px;
                 min-width: 450px;
 			}
+            div#page
+            {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                right: 0px;
+                bottom: 0px;
+            }
 			div#top_bar
 			{
 				background: rgba(0, 128, 255, 0.5);
@@ -138,11 +146,7 @@
 			/* <![CDATA[ */
 			window.Main = function ()
 			{
-                document.addEventListener('contextmenu', function (e) {
-                    e.preventDefault()
-                })
-
-				var addElement = function (objId, children, events)
+				var addElement = function (objId, children, events, methods)
                 {
                     var result = document.getElementById(objId)
                     if (arguments.length > 1) {
@@ -166,13 +170,29 @@
                     ActiveMenu: null,
                     ContentMenu: addElement('content_menu', {
                         AddItem: addElement('content_menu_add_item')
-                    })
+                    }),
+                    hide: function (menuObj)
+                    {
+                        if (menuObj !== null) {
+                            menuObj.style.display = 'none'
+                        }
+                    },
+                    popup: function (menuObj, x, y)
+                    {
+                        if (window.Menus.ActiveMenu !== null) {
+                            window.Menus.hide(window.Menus.ActiveMenu)
+                            window.Menus.ActiveMenu = null
+                        }
+                        menuObj.style.display = 'block'
+                        var fitsLeft = x + menuObj.offsetWidth < window.Page.offsetWidth
+                        var fitsTop = y + menuObj.offsetHeight < window.Page.offsetHeight
+                        menuObj.style.left = fitsLeft ? x + 'px' : 'auto'
+                        menuObj.style.top = fitsTop ? y + 'px' : 'auto'
+                        menuObj.style.right = fitsLeft ? 'auto' : (window.Page.offsetWidth - x) + 'px'
+                        menuObj.style.bottom = fitsTop ? 'auto' : (window.Page.offsetHeight - y) + 'px'
+                        window.Menus.ActiveMenu = menuObj
+                    }
                 })
-
-                window.Menus.popup = function (menuObj)
-                {
-                    menuObj.style.display = 'block'
-                }
 
                 window.Page = addElement('page', {
                     TopBar: addElement('top_bar', {
@@ -184,11 +204,21 @@
                     Content: addElement('content', {}, {
                         'contextmenu': function (e)
                         {
-                            window.Menus.popup(window.Menus.ContentMenu)
-                            console.log(e)
+                            window.Menus.popup(window.Menus.ContentMenu, e.clientX, e.clientY)
+                            //e.preventDefault()
                         }
                     }),
                     BottomBar: addElement('bottom_bar')
+                })
+
+                document.addEventListener('contextmenu', function (e) {
+                    e.preventDefault()
+                })
+
+                document.addEventListener('click', function (e) {
+                    if (e.button === 0) {
+                        window.Menus.hide(window.Menus.ActiveMenu)
+                    }
                 })
 			}
 			
