@@ -162,6 +162,18 @@
                     return result
                 }
 
+                window.Menus = addElement('menus', {
+                    ActiveMenu: null,
+                    ContentMenu: addElement('content_menu', {
+                        AddItem: addElement('content_menu_add_item')
+                    })
+                })
+
+                window.Menus.popup = function (menuObj)
+                {
+                    menuObj.style.display = 'block'
+                }
+
                 window.Page = addElement('page', {
                     TopBar: addElement('top_bar', {
                         Items: addElement('top_bar_items', {
@@ -172,7 +184,8 @@
                     Content: addElement('content', {}, {
                         'contextmenu': function (e)
                         {
-                            console.log('content context menu')
+                            window.Menus.popup(window.Menus.ContentMenu)
+                            console.log(e)
                         }
                     }),
                     BottomBar: addElement('bottom_bar')
