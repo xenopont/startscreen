@@ -203,6 +203,14 @@
                     return result
                 }
 
+                window.Helpers =
+                {
+                    search: function (searchString)
+                    {
+                        window.location.href = 'http://yandex.ru/yandsearch?text=' + searchString
+                    }
+                }
+
                 window.Menus = addElement('menus', {
                     ActiveMenu: null,
                     ContentMenu: addElement('content_menu', {
@@ -239,7 +247,14 @@
                     TopBar: addElement('top_bar', {
                         Items: addElement('top_bar_items', {
                             SearchKeyword: addElement('search_keyword'),
-                            SearchButton: addElement('search_button')
+                            SearchButton: addElement('search_button', {}, {
+                                'click': function (e)
+                                {
+                                    if (window.Page.TopBar.Items.SearchKeyword.value !== '') {
+                                        window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
+                                    }
+                                }
+                            })
                         })
                     }, {
                         'contextmenu': function (e)
@@ -262,7 +277,9 @@
                 })
 
                 document.addEventListener('contextmenu', function (e) {
-                    e.preventDefault()
+                    if (e.target !== window.Page.TopBar.Items.SearchKeyword) {
+                        e.preventDefault()
+                    }
                 })
 
                 document.addEventListener('click', function (e) {
