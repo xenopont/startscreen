@@ -45,24 +45,24 @@
                     }
                         input#search_keyword
                         {
-                            width: 25ex;
+                            width: 35ex;
                             height: 27px;
-                            max-height: 27px;
+                            /* max-height: 27px; */
                             font-family: 'Calibri', 'Tahoma', 'Arial', sans-serif;
                             font-size: 11pt;
                             color: rgba(0, 0, 0, 0.85);
                             border: none;
-                            border-radius: 4px 0px 0px 4px;
+                            border-radius: 12px 0px 0px 12px;
                             margin: 0px;
-                            padding: auto 0px auto 8px;
+                            padding: 0px 12px;
                             vertical-align: middle;
                         }
                         button#search_button
                         {
-                            height: 29px;
+                            height: 27px;
                             margin: 0px;
                             border: none;
-                            border-radius: 0px 4px 4px 0px;
+                            border-radius: 0px 12px 12px 0px;
                             vertical-align: middle;
                         }
 			div#content
@@ -273,6 +273,8 @@
                 document.addEventListener('blur', function (e) {
                     window.Menus.hide(window.Menus.ActiveMenu)
                 })
+
+                window.Page.TopBar.Items.SearchKeyword.focus()
 			}
 			
 			document.addEventListener(
@@ -298,7 +300,7 @@
 			<div id="top_bar">
 				<ul id="top_bar_items">
                     <li id="search_field">
-                        <input id="search_keyword" type="text" value="Search keywords" /><button id="search_button" type="button">Search</button>
+                        <input id="search_keyword" type="text" value="" /><button id="search_button" type="button">Search</button>
                     </li>
                 </ul>
 			</div>
