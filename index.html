@@ -70,12 +70,29 @@
 			{
 				position: absolute;
 				left: 0px;
-				top: 0px;
+				top: 64px;
 				right: 0px;
-				bottom: 0px;
+				bottom: 48px;
 				background: rgba(0, 0, 0, 0.25);
                 min-height: 450px;
+                padding: 32px 32px;
+                overflow: auto;
 			}
+                div.shortcut_group
+                {
+                    background: rgba(128, 128, 128, 0.5);
+                    padding: 2px;
+                    margin: 16px 0px;
+                }
+                    div.shortcut
+                    {
+                        display: inline-block;
+                        width: 64px;
+                        height: 64px;
+                        background: rgba(192, 192, 192, 0.5);
+                        margin: 1px;
+                        border: 1px solid rgba(0, 0, 0, 0.25);
+                    }
 			div#bottom_bar
 			{
 				background: rgba(0, 192, 128, 0.5);
@@ -143,6 +160,7 @@
                     {
                         background: transparent;
                     }
+            /* animations */
             @keyframes menu_popup
             {
                 from
@@ -183,20 +201,28 @@
 			/* <![CDATA[ */
 			window.Main = function ()
 			{
-				var addElement = function (objId, children, events, methods)
+                var xElement = function (obj)
                 {
-                    var result = document.getElementById(objId)
-                    if (arguments.length > 1) {
-                        for (var key in children) {
-                            if (children.hasOwnProperty(key)) {
-                                result[key] = children[key]
+                    var result = null
+                    var type = typeof obj.instance
+                    switch (type) {
+                        case 'undefined':
+                            result = {}
+                            break
+                        case 'string':
+                            result = document.getElementById(obj.instance)
+                            break
+                        case 'object':
+                            result = obj.instance
+                            break
+                    }
+                    for (var p in obj) {
+                        if (p !== 'instance' && obj.hasOwnProperty(p)) {
+                            if (p.substr(0, 3) === 'evt') {
+                                result.addEventListener(p.substr(3), obj[p])
                             }
-                        }
-                        if (arguments.length > 2) {
-                            for (var e in events) {
-                                if (events.hasOwnProperty(e)) {
-                                    result.addEventListener(e, events[e])
-                                }
+                            else {
+                                result[p] = obj[p]
                             }
                         }
                     }
@@ -205,6 +231,14 @@
 
                 window.Helpers =
                 {
+                    loadShortcuts: function ()
+                    {
+                        //
+                    },
+                    saveShortcuts: function ()
+                    {
+                        //
+                    },
                     search: function (searchString)
                     {
                         if (searchString !== '') {
@@ -213,10 +247,10 @@
                     }
                 }
 
-                window.Menus = addElement('menus', {
+                window.Menus = xElement({ instance: 'menus',
                     ActiveMenu: null,
-                    ContentMenu: addElement('content_menu', {
-                        AddItem: addElement('content_menu_add_item')
+                    ContentMenu: xElement({ instance: 'content_menu',
+                        AddItem: xElement({ instance: 'content_menu_add_item'})
                     }),
                     hide: function (menuObj)
                     {
@@ -245,39 +279,39 @@
                     }
                 })
 
-                window.Page = addElement('page', {
-                    TopBar: addElement('top_bar', {
-                        Items: addElement('top_bar_items', {
-                            SearchKeyword: addElement('search_keyword', {}, {
-                                'paste': function (e)
+                window.Page = xElement({ instance: 'page',
+                    TopBar: xElement({ instance: 'top_bar',
+                        Items: xElement({ instance: 'top_bar_items',
+                            SearchKeyword: xElement({ instance: 'search_keyword',
+                                'evtpaste': function (e)
                                 {
                                     setTimeout(function () {
                                         window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
                                     }, 10)
                                 }
                             }),
-                            SearchButton: addElement('search_button', {}, {
-                                'click': function (e)
+                            SearchButton: xElement({ instance: 'search_button',
+                                'evtclick': function (e)
                                 {
                                     window.Page.TopBar.Items.SearchKeyword.focus()
                                     window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
                                 }
                             })
-                        })
-                    }, {
-                        'contextmenu': function (e)
+                        }),
+                        'evtcontextmenu': function (e)
                         {
                             window.Menus.hide(window.Menus.ActiveMenu)
                         }
                     }),
-                    Content: addElement('content', {}, {
-                        'contextmenu': function (e)
+                    Content: xElement({ instance: 'content',
+                        ShortcutGroup: null,
+                        'evtcontextmenu': function (e)
                         {
                             window.Menus.popup(window.Menus.ContentMenu, e.clientX, e.clientY)
                         }
                     }),
-                    BottomBar: addElement('bottom_bar', {}, {
-                        'contextmenu': function (e)
+                    BottomBar: xElement({instance: 'bottom_bar',
+                        'evtcontextmenu': function (e)
                         {
                             window.Menus.hide(window.Menus.ActiveMenu)
                         }
@@ -331,7 +365,16 @@
                 </ul>
 			</div>
 			<div id="content">
-				
+				<div class="shortcut_group"><div class="shortcut">12345</div><div class="shortcut">12345</div></div>
+                <div class="shortcut_group"><div class="shortcut">12345</div><div class="shortcut">12345</div></div>
+                <div class="shortcut_group"><div class="shortcut">12345</div><div class="shortcut">12345</div></div>
+                <div class="shortcut_group"><div class="shortcut">12345</div><div class="shortcut">12345</div></div>
+                <div class="shortcut_group"><div class="shortcut">12345</div><div class="shortcut">12345</div></div>
+                <div class="shortcut_group"><div class="shortcut">12345</div><div class="shortcut">12345</div></div>
+                <div class="shortcut_group"><div class="shortcut">12345</div><div class="shortcut">12345</div></div>
+                <div class="shortcut_group"><div class="shortcut">12345</div><div class="shortcut">12345</div></div>
+                <div class="shortcut_group"><div class="shortcut">12345</div><div class="shortcut">12345</div></div>
+                <div class="shortcut_group"><div class="shortcut">12345</div><div class="shortcut">12345</div></div>
 			</div>
 			<div id="bottom_bar">
 				
