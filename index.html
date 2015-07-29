@@ -73,14 +73,24 @@
 			{
 				position: absolute;
 				left: 0px;
-				top: 64px;
+				top: 0px;
 				right: 0px;
-				bottom: 48px;
+				bottom: 0px;
 				background: rgba(0, 0, 0, 0.25);
                 min-height: 450px;
-                padding: 32px 32px;
+                padding: 64px 0px;
                 overflow: auto;
 			}
+                div#content div.group
+                {
+                    position: absolute;
+                    background: rgba(0, 0, 0, 0.25);
+                }
+                    div#content div.group div.shortcut
+                    {
+                        position: absolute;
+                        background: #88ccff;
+                    }
 			div#bottom_bar
 			{
 				background: rgba(0, 192, 128, 0.5);
@@ -350,7 +360,10 @@
                 </ul>
 			</div>
 			<div id="content">
-
+                <div class="group">
+                    <div class="shortcut">Facebook</div>
+                    <div class="shortcut">vk</div>
+                </div>
 			</div>
 			<div id="bottom_bar">
 				
