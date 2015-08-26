@@ -216,8 +216,8 @@
                     }
                     for (var p in obj) {
                         if (p !== 'instance' && obj.hasOwnProperty(p)) {
-                            if (p.substr(0, 3) === 'evt') {
-                                result.addEventListener(p.substr(3), obj[p])
+                            if (p.substr(0, 4) === 'evt-') {
+                                result.addEventListener(p.substr(4), obj[p])
                             }
                             else {
                                 result[p] = obj[p]
@@ -269,44 +269,74 @@
                     }
                 })
 
+                window.Storage = xElement({
+                    load: function ()
+                    {
+                        return {
+                            Groups: [
+                                {
+                                    Shortcuts: [
+                                        {
+                                            title: 'Facebook',
+                                            url: 'https://facebook.com/'
+                                        },
+                                        {
+                                            title: 'VK',
+                                            url: 'https://vk.com/'
+                                        }
+                                    ]
+                                },
+                                {
+                                    Shortcuts: [
+                                        {
+                                            title: 'Youtube',
+                                            url: 'https://youtube.com/'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                })
+
                 window.Page = xElement({ instance: 'page',
                     TopBar: xElement({ instance: 'top_bar',
                         Items: xElement({ instance: 'top_bar_items',
                             SearchKeyword: xElement({ instance: 'search_keyword',
-                                'evtpaste': function (e)
+                                'evt-paste': function (e)
                                 {
                                     setTimeout(function () {
                                         window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
                                     }, 10)
                                 },
-                                'evtkeypress': function (e) {
+                                'evt-keypress': function (e) {
                                     if (e.keyCode == 13) {
                                         window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
                                     }
                                 }
                             }),
                             SearchButton: xElement({ instance: 'search_button',
-                                'evtclick': function (e)
+                                'evt-click': function (e)
                                 {
                                     window.Page.TopBar.Items.SearchKeyword.focus()
                                     window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
                                 }
                             })
                         }),
-                        'evtcontextmenu': function (e)
+                        'evt-contextmenu': function (e)
                         {
                             window.Menus.hide(window.Menus.ActiveMenu)
                         }
                     }),
                     Content: xElement({ instance: 'content',
                         ShortcutGroup: null,
-                        'evtcontextmenu': function (e)
+                        'evt-contextmenu': function (e)
                         {
                             window.Menus.popup(window.Menus.ContentMenu, e.clientX, e.clientY)
                         }
                     }),
                     BottomBar: xElement({instance: 'bottom_bar',
-                        'evtcontextmenu': function (e)
+                        'evt-contextmenu': function (e)
                         {
                             window.Menus.hide(window.Menus.ActiveMenu)
                         }
@@ -342,7 +372,7 @@
 						case 'interactive': // document is loaded but not sub resources
 							window.Main()
 							break
-						case 'complete':    // document and it's resources are loaded completely
+						case 'complete':    // document and its resources are loaded completely
 							break
 					}
 				}
@@ -360,10 +390,7 @@
                 </ul>
 			</div>
 			<div id="content">
-                <div class="group">
-                    <div class="shortcut">Facebook</div>
-                    <div class="shortcut">vk</div>
-                </div>
+
 			</div>
 			<div id="bottom_bar">
 				
