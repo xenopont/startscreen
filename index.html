@@ -90,7 +90,16 @@
                     {
                         position: absolute;
                         background: #88ccff;
+                        width: 210px;
+                        height: 102px;
+                        box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.2), 0px 0px 0px 1px rgba(0, 0, 0, 0.30);
                     }
+                        div#content div.group div.shortcut span.title
+                        {
+                            position: absolute;
+                            right: 8px;
+                            bottom: 8px;
+                        }
 			div#bottom_bar
 			{
 				background: rgba(0, 192, 128, 0.5);
@@ -360,7 +369,7 @@
 
                 window.Page.TopBar.Items.SearchKeyword.focus()
 			}
-			
+
 			document.addEventListener(
 				'readystatechange',
 				function ()
@@ -389,10 +398,23 @@
                 </ul>
 			</div>
 			<div id="content">
-
+                <div class="group">
+                    <div class="shortcut" style="left: 0px; top: 0px;" onclick="document.location.href='https://facebook.com/'">
+                        <span class="title">facebook</span>
+                    </div>
+                    <div class="shortcut" style="left: 213px; top: 0px;" onclick="document.location.href='https://vk.com/'">
+                        <span class="title">vk</span>
+                    </div>
+                    <div class="shortcut" style="left: 426px; top: 0px;" onclick="document.location.href='https://youtube.com/'">
+                        <span class="title">youtube</span>
+                    </div>
+                    <div class="shortcut" style="left: 0px; top: 105px;" onclick="document.location.href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference'">
+                        <span class="title">MDN</span>
+                    </div>
+                </div>
 			</div>
 			<div id="bottom_bar">
-				
+
 			</div>
 		</div>
         <div id="menus">
