@@ -96,10 +96,14 @@
                         height: 102px;
                         box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 255, 0.2), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.30);
                         border-radius: 2px;
+                        animation-duration: 0.13s;
+                        animation-name: shortcut_mouse_out;
                     }
                     div#content div.group div.shortcut:hover
                     {
                         opacity: 0.92;
+                        animation-duration: 0.25s;
+                        animation-name: shortcut_mouse_over;
                     }
                         div#content div.group div.shortcut span.title
                         {
@@ -146,6 +150,18 @@
                     box-shadow: 2px 4px 4px 0px rgba(0, 0, 0, 0.13);
                     display: none;
                 }
+                ul.menu_popup
+                {
+                    opacity: 1;
+                    animation-duration: 0.25s;
+                    animation-name: menu_popup;
+                }
+                ul.menu_hide
+                {
+                    opacity: 0;
+                    animation-duration: 0.13s;
+                    animation-name: menu_hide;
+                }
                     div#menus ul li
                     {
                         display: block;
@@ -187,37 +203,24 @@
              **********************************************************************************************************/
             @keyframes menu_popup
             {
-                from
-                {
-                    opacity: 0;
-                }
-                to
-                {
-                    opacity: 1;
-                }
+                from { opacity: 0; }
+                to   { opacity: 1; }
             }
             @keyframes menu_hide
             {
-                from
-                {
-                    opacity: 1;
-                }
-                to
-                {
-                    opacity: 0;
-                }
+                from { opacity: 1; }
+                to   { opacity: 0; }
             }
-            ul.menu_popup
+
+            @keyframes shortcut_mouse_over
             {
-                opacity: 1;
-                animation-duration: 0.25s;
-                animation-name: menu_popup;
+                from { opacity: 0.70; }
+                to   { opacity: 0.92; }
             }
-            ul.menu_hide
+            @keyframes shortcut_mouse_out
             {
-                opacity: 0;
-                animation-duration: 0.13s;
-                animation-name: menu_hide;
+                from { opacity: 0.92; }
+                to   { opacity: 0.70; }
             }
             /* ]]> */
 		</style>
@@ -371,6 +374,10 @@
                                 Color: color,
                                 Title: text,
                                 Url: url,
+                                setColor: function (newColor) {
+                                    this.Color = newColor
+                                    this.style.backgroundColor = this.Color
+                                },
                                 'evt-click': function (e) {
                                     window.location.href = this.Url
                                 }
@@ -380,7 +387,7 @@
                                 className: 'title',
                                 innerHTML: result.Title
                             }))
-                            result.style.backgroundColor = color
+                            result.setColor(color)
                             return result
                         }
                     }),
@@ -412,7 +419,7 @@
                 // group and shortcut creation test {
                 var g = window.Page.Content.createGroup()
                 g.addShortcut(
-                        window.Page.Content.createShortcut('http://google.com/', 'google', '#c00')
+                    window.Page.Content.createShortcut('http://google.com/', 'google', '#c00')
                 )
                 window.Page.Content.addGroup(g)
                 // } group and shortcut creation test
