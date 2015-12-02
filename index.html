@@ -22,7 +22,8 @@
             }
 			div#top_bar
 			{
-				background: rgba(0, 128, 255, 0.5);
+				background: rgba(255, 255, 255, 0.1);
+                box-shadow: inset 0px -1px 0px 0px rgba(255, 255, 255, 0.1);
 				position: absolute;
 				left: 0px;
 				right: 0px;
@@ -76,7 +77,7 @@
 				top: 0px;
 				right: 0px;
 				bottom: 0px;
-				background: rgba(0, 0, 0, 0.25);
+				background: transparent;
                 min-height: 450px;
                 padding: 64px 0px;
                 overflow: auto;
@@ -90,20 +91,27 @@
                     {
                         position: absolute;
                         background: rgba(13, 128, 255, 1);
+                        opacity: 0.70;
                         width: 210px;
                         height: 102px;
-                        box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.2), 0px 0px 0px 1px rgba(0, 0, 0, 0.30);
+                        box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 255, 0.2), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.30);
                         border-radius: 2px;
+                    }
+                    div#content div.group div.shortcut:hover
+                    {
+                        opacity: 0.92;
                     }
                         div#content div.group div.shortcut span.title
                         {
                             position: absolute;
                             right: 8px;
                             bottom: 8px;
+                            color: #fff;
                         }
 			div#bottom_bar
 			{
-				background: rgba(0, 192, 128, 0.5);
+				background: rgba(255, 255, 255, 0.1);
+                box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1);
 				position: absolute;
 				left: 0px;
 				right: 0px;
@@ -111,6 +119,10 @@
 				height: 48px;
                 z-index: 1000;
 			}
+            img#page_background
+            {
+                /* */
+            }
             div#menus
             {
                 /* */
@@ -168,7 +180,11 @@
                     {
                         background: transparent;
                     }
-            /* animations */
+            /***********************************************************************************************************
+             *
+             * Animations
+             *
+             **********************************************************************************************************/
             @keyframes menu_popup
             {
                 from
@@ -294,6 +310,11 @@
                     }
                 })
 
+                /*******************************************************************************************************
+                 *
+                 * Page markup
+                 *
+                 ******************************************************************************************************/
                 window.Page = xElement({ instance: 'page',
                     TopBar: xElement({ instance: 'top_bar',
                         Items: xElement({ instance: 'top_bar_items',
@@ -327,14 +348,30 @@
                         'evt-contextmenu': function (e)
                         {
                             window.Menus.popup(window.Menus.ContentMenu, e.clientX, e.clientY)
+                        },
+                        Groups: [],
+                        addGroup: function (group) {
+                            this.Groups.push(group)
+                            this.appendChild(group)
+                        },
+                        createGroup: function () {
+                            return xElement({ instance: document.createElement('div'),
+                                Shortcuts: [],
+                                className: 'group',
+                                addShortcut: function (shortcut) {
+                                    this.Shortcuts.push(shortcut)
+                                    this.appendChild(shortcut)
+                                }
+                            })
                         }
                     }),
-                    BottomBar: xElement({instance: 'bottom_bar',
+                    BottomBar: xElement({ instance: 'bottom_bar',
                         'evt-contextmenu': function (e)
                         {
                             window.Menus.hide(window.Menus.ActiveMenu)
                         }
-                    })
+                    }),
+                    Background: xElement({ instance: 'page_background' })
                 })
 
                 document.addEventListener('contextmenu', function (e) {
@@ -377,6 +414,7 @@
 	</head>
 	<body>
 		<div id="page">
+            <img id="page_background" src="./bkgrnd/017.jpg" alt="" width="100%" height="100%" />
 			<div id="top_bar">
 				<ul id="top_bar_items">
                     <li id="search_field">
@@ -389,13 +427,13 @@
                     <div class="shortcut" style="left: 0px; top: 0px;" onclick="document.location.href='https://facebook.com/'">
                         <span class="title">facebook</span>
                     </div>
-                    <div class="shortcut" style="left: 213px; top: 0px;" onclick="document.location.href='https://vk.com/'">
+                    <div class="shortcut" style="left: 211px; top: 0px;" onclick="document.location.href='https://vk.com/'">
                         <span class="title">vk</span>
                     </div>
-                    <div class="shortcut" style="left: 426px; top: 0px;" onclick="document.location.href='https://youtube.com/'">
+                    <div class="shortcut" style="left: 422px; top: 0px;" onclick="document.location.href='https://youtube.com/'">
                         <span class="title">youtube</span>
                     </div>
-                    <div class="shortcut" style="left: 0px; top: 105px;" onclick="document.location.href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference'">
+                    <div class="shortcut" style="left: 0px; top: 102px;" onclick="document.location.href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference'">
                         <span class="title">MDN</span>
                     </div>
                 </div>
