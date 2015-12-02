@@ -169,6 +169,7 @@
                         padding: 8px 24px 8px 32px;
                         cursor: default;
                         vertical-align: middle;
+                        color: rgba(0, 0, 0, 0.85);
                     }
                     div#menus ul li:hover
                     {
@@ -193,6 +194,14 @@
                         margin: 0px 2px;
                     }
                     div#menus ul li.separator:hover
+                    {
+                        background: transparent;
+                    }
+                    div#menus ul li.disabled
+                    {
+                        color: rgba(0, 0, 0, 0.35);
+                    }
+                    div#menus ul li.disabled:hover
                     {
                         background: transparent;
                     }
@@ -479,6 +488,10 @@
         <div id="menus">
             <ul id="content_menu">
                 <li id="content_menu_add_item">Add item</li>
+                <li class="separator">-</li>
+                <li id="new_item">Do nothing</li>
+                <li id="new_item2" class="disabled">Disabled</li>
+                <li id="new_item3">Do everything</li>
             </ul>
         </div>
 	</body>
