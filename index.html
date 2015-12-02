@@ -363,6 +363,25 @@
                                     this.appendChild(shortcut)
                                 }
                             })
+                        },
+                        createShortcut: function (url, text, color) {
+                            var result = xElement({
+                                instance: document.createElement('div'),
+                                className: 'shortcut',
+                                Color: color,
+                                Title: text,
+                                Url: url,
+                                'evt-click': function (e) {
+                                    window.location.href = this.Url
+                                }
+                            })
+                            result.appendChild(xElement({
+                                instance: document.createElement('span'),
+                                className: 'title',
+                                innerHTML: result.Title
+                            }))
+                            result.style.backgroundColor = color
+                            return result
                         }
                     }),
                     BottomBar: xElement({ instance: 'bottom_bar',
@@ -389,6 +408,14 @@
                 document.addEventListener('blur', function (e) {
                     window.Menus.hide(window.Menus.ActiveMenu)
                 })
+
+                // group and shortcut creation test {
+                var g = window.Page.Content.createGroup()
+                g.addShortcut(
+                        window.Page.Content.createShortcut('http://google.com/', 'google', '#c00')
+                )
+                window.Page.Content.addGroup(g)
+                // } group and shortcut creation test
 
                 window.Page.TopBar.Items.SearchKeyword.focus()
 			}
