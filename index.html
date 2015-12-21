@@ -97,7 +97,7 @@
                         left: 8px;
                         top: 8px;
                         overflow: hidden;
-                        box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 255, 0.2), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.40);
+                        box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 255, 0.2), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.45);
                         border-radius: 0px;
                     }
                         div#content div.group div.shortcut span.title
@@ -233,8 +233,11 @@
                     MARGIN_X = 4,
                     MARGIN_Y = 4,
 
-                    SHORTCUT_BG_OPACITY = 0.75,
-                    SHORTCUT_BG_OPACITY_HOVER = 0.95,
+                    SHORTCUT_BG_OPACITY = 0.70,
+                    SHORTCUT_BG_OPACITY_HOVER = 0.92,
+
+                    SIZE_MAX_X = 5,
+                    SIZE_MAX_Y = 5,
 
                     UNIT_X = 48,
                     UNIT_Y = 48
@@ -255,46 +258,17 @@
                             this.a = a
                             return this
                         },
-                        toRgb: function () {
-                            return 'rgb(' + r + ', ' + g + ', ' + b + ')'
-                        },
                         toRgba: function () {
                             return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + a + ')'
                         }
                     }
                 }
 
-                /*******************************************************************************************************
-                 *
-                 * xElement()
-                 *
-                 ******************************************************************************************************/
-                var xElement = function (obj)
-                {
-                    var result = null
-                    var type = typeof obj.instance
-                    switch (type) {
-                        case 'undefined':
-                            result = {}
-                            break
-                        case 'string':
-                            result = document.getElementById(obj.instance)
-                            break
-                        case 'object':
-                            result = obj.instance
-                            break
+                var size = function (x, y) {
+                    return {
+                        width: Math.min(x, SIZE_MAX_X),
+                        height: Math.min(y, SIZE_MAX_Y)
                     }
-                    for (var p in obj) {
-                        if (p !== 'instance' && obj.hasOwnProperty(p)) {
-                            if (p.substr(0, 4) === 'evt-') {
-                                result.addEventListener(p.substr(4), obj[p])
-                            }
-                            else {
-                                result[p] = obj[p]
-                            }
-                        }
-                    }
-                    return result
                 }
 
                 /*******************************************************************************************************
@@ -318,6 +292,7 @@
                         instance: document.createElement('div'),
                         className: 'shortcut',
                         Color: (properties.hasOwnProperty('color') ? properties.color : randomColor()).setOpacity(SHORTCUT_BG_OPACITY),
+                        Size:  (properties.hasOwnProperty('size')  ? properties.size  : size(4, 2)),
                         Title: (properties.hasOwnProperty('title') ? properties.title : ''),
                         Url:   (properties.hasOwnProperty('url')   ? properties.url   : '#'),
                         setColor: function (newColor) {
@@ -357,6 +332,34 @@
                     if (searchString !== '') {
                         window.location.href = 'http://yandex.ru/yandsearch?text=' + searchString
                     }
+                }
+
+                var xElement = function (obj)
+                {
+                    var result = null
+                    var type = typeof obj.instance
+                    switch (type) {
+                        case 'undefined':
+                            result = {}
+                            break
+                        case 'string':
+                            result = document.getElementById(obj.instance)
+                            break
+                        case 'object':
+                            result = obj.instance
+                            break
+                    }
+                    for (var p in obj) {
+                        if (p !== 'instance' && obj.hasOwnProperty(p)) {
+                            if (p.substr(0, 4) === 'evt-') {
+                                result.addEventListener(p.substr(4), obj[p])
+                            }
+                            else {
+                                result[p] = obj[p]
+                            }
+                        }
+                    }
+                    return result
                 }
 
                 /*******************************************************************************************************
