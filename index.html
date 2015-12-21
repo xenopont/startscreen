@@ -65,6 +65,7 @@
                             border: none;
                             border-radius: 0px 12px 12px 0px;
                             vertical-align: middle;
+                            font-size: 10pt;
                         }
                         input#search_keyword:focus, button#search_button
                         {
@@ -91,19 +92,13 @@
                     {
                         position: absolute;
                         background: rgba(13, 128, 255, 1);
-                        opacity: 0.70;
-                        width: 210px;
-                        height: 102px;
-                        box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 255, 0.2), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.30);
-                        border-radius: 2px;
-                        animation-duration: 0.13s;
-                        animation-name: shortcut_mouse_out;
-                    }
-                    div#content div.group div.shortcut:hover
-                    {
-                        opacity: 0.92;
-                        animation-duration: 0.25s;
-                        animation-name: shortcut_mouse_over;
+                        width: 204px;
+                        height: 100px;
+                        left: 8px;
+                        top: 8px;
+                        overflow: hidden;
+                        box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 255, 0.2), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.40);
+                        border-radius: 0px;
                     }
                         div#content div.group div.shortcut span.title
                         {
@@ -111,6 +106,8 @@
                             right: 8px;
                             bottom: 8px;
                             color: #fff;
+                            font-size: 10pt;
+                            cursor: default;
                         }
 			div#bottom_bar
 			{
@@ -220,26 +217,49 @@
                 from { opacity: 1; }
                 to   { opacity: 0; }
             }
-
-            @keyframes shortcut_mouse_over
-            {
-                from { opacity: 0.70; }
-                to   { opacity: 0.92; }
-            }
-            @keyframes shortcut_mouse_out
-            {
-                from { opacity: 0.92; }
-                to   { opacity: 0.70; }
-            }
             /* ]]> */
 		</style>
 		<script type="text/javascript">
 			/* <![CDATA[ */
 			window.Main = function ()
 			{
+
                 /*******************************************************************************************************
                  *
-                 * XElement()
+                 * Constants
+                 *
+                 ******************************************************************************************************/
+                var
+                    MARGIN_X = 4,
+                    MARGIN_Y = 4,
+
+                    UNIT_X = 48,
+                    UNIT_Y = 48
+
+                /*******************************************************************************************************
+                 *
+                 * Types
+                 *
+                 ******************************************************************************************************/
+                var color = function (r, g, b, a) {
+                    return {
+                        r: r,
+                        g: g,
+                        b: b,
+                        a: a,
+
+                        toRgb: function () {
+                            return 'rgb(' + r + ', ' + g + ', ' + b + ')'
+                        },
+                        toRgba: function () {
+                            return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + a + ')'
+                        }
+                    }
+                }
+
+                /*******************************************************************************************************
+                 *
+                 * xElement()
                  *
                  ******************************************************************************************************/
                 var xElement = function (obj)
@@ -275,13 +295,52 @@
                  * Helpers
                  *
                  ******************************************************************************************************/
-                window.Helpers =
-                {
-                    search: function (searchString)
-                    {
-                        if (searchString !== '') {
-                            window.location.href = 'http://yandex.ru/yandsearch?text=' + searchString
+                var createGroup = function () {
+                    return xElement({ instance: document.createElement('div'),
+                        Shortcuts: [],
+                        className: 'group',
+                        addShortcut: function (shortcut) {
+                            this.Shortcuts.push(shortcut)
+                            this.appendChild(shortcut)
                         }
+                    })
+                }
+
+                var createShortcut = function (properties) {
+                    var result = xElement({
+                        instance: document.createElement('div'),
+                        className: 'shortcut',
+                        Color: (properties.hasOwnProperty('color') ? properties.color : randomColor()),
+                        Title: (properties.hasOwnProperty('title') ? properties.title : ''),
+                        Url:   (properties.hasOwnProperty('url')   ? properties.url   : '#'),
+                        setColor: function (newColor) {
+                            this.Color = newColor
+                            this.style.backgroundColor = this.Color.toRgba()
+                        },
+                        'evt-click': function (e) {
+                            window.location.href = this.Url
+                        }
+                    })
+                    result.appendChild(xElement({
+                        instance: document.createElement('span'),
+                        className: 'title',
+                        innerHTML: result.Title
+                    }))
+                    result.setColor(result.Color)
+                    return result
+                }
+
+                var rand = function (min, max) {
+                    return Math.floor(min + Math.random() * (max - min));
+                }
+
+                var randomColor = function () {
+                    return color( rand(32, 223), rand(32, 223), rand(32, 223), 1 )
+                }
+
+                var search = function (searchString) {
+                    if (searchString !== '') {
+                        window.location.href = 'http://yandex.ru/yandsearch?text=' + searchString
                     }
                 }
 
@@ -293,7 +352,7 @@
                 window.Menus = xElement({ instance: 'menus',
                     ActiveMenu: null,
                     ContentMenu: xElement({ instance: 'content_menu',
-                        AddItem: xElement({ instance: 'content_menu_add_item'})
+                        AddItem: xElement({ instance: 'content_menu_add_item' })
                     }),
                     hide: function (menuObj)
                     {
@@ -334,12 +393,12 @@
                                 'evt-paste': function (e)
                                 {
                                     setTimeout(function () {
-                                        window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
+                                        search(window.Page.TopBar.Items.SearchKeyword.value)
                                     }, 10)
                                 },
                                 'evt-keypress': function (e) {
                                     if (e.keyCode == 13) {
-                                        window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
+                                        search(window.Page.TopBar.Items.SearchKeyword.value)
                                     }
                                 }
                             }),
@@ -347,7 +406,7 @@
                                 'evt-click': function (e)
                                 {
                                     window.Page.TopBar.Items.SearchKeyword.focus()
-                                    window.Helpers.search(window.Page.TopBar.Items.SearchKeyword.value)
+                                    search(window.Page.TopBar.Items.SearchKeyword.value)
                                 }
                             })
                         }),
@@ -365,39 +424,6 @@
                         addGroup: function (group) {
                             this.Groups.push(group)
                             this.appendChild(group)
-                        },
-                        createGroup: function () {
-                            return xElement({ instance: document.createElement('div'),
-                                Shortcuts: [],
-                                className: 'group',
-                                addShortcut: function (shortcut) {
-                                    this.Shortcuts.push(shortcut)
-                                    this.appendChild(shortcut)
-                                }
-                            })
-                        },
-                        createShortcut: function (url, text, color) {
-                            var result = xElement({
-                                instance: document.createElement('div'),
-                                className: 'shortcut',
-                                Color: color,
-                                Title: text,
-                                Url: url,
-                                setColor: function (newColor) {
-                                    this.Color = newColor
-                                    this.style.backgroundColor = this.Color
-                                },
-                                'evt-click': function (e) {
-                                    window.location.href = this.Url
-                                }
-                            })
-                            result.appendChild(xElement({
-                                instance: document.createElement('span'),
-                                className: 'title',
-                                innerHTML: result.Title
-                            }))
-                            result.setColor(color)
-                            return result
                         }
                     }),
                     BottomBar: xElement({ instance: 'bottom_bar',
@@ -409,6 +435,11 @@
                     Background: xElement({ instance: 'page_background' })
                 })
 
+                /*******************************************************************************************************
+                 *
+                 * Document events
+                 *
+                 ******************************************************************************************************/
                 document.addEventListener('contextmenu', function (e) {
                     if (e.target !== window.Page.TopBar.Items.SearchKeyword) {
                         e.preventDefault()
@@ -425,13 +456,20 @@
                     window.Menus.hide(window.Menus.ActiveMenu)
                 })
 
+
+
                 // group and shortcut creation test {
-                var g = window.Page.Content.createGroup()
+                var g = createGroup()
                 g.addShortcut(
-                    window.Page.Content.createShortcut('http://google.com/', 'google', '#c00')
+                    createShortcut({
+                        url: 'http://google.com/',
+                        title: 'Google'
+                    })
                 )
                 window.Page.Content.addGroup(g)
                 // } group and shortcut creation test
+
+
 
                 window.Page.TopBar.Items.SearchKeyword.focus()
 			}
@@ -457,7 +495,7 @@
 	</head>
 	<body>
 		<div id="page">
-            <img id="page_background" src="./bkgrnd/017.jpg" alt="" width="100%" height="100%" />
+            <img id="page_background" src="./bkgrnd/016.jpg" alt="" width="100%" height="100%" />
 			<div id="top_bar">
 				<ul id="top_bar_items">
                     <li id="search_field">
@@ -466,20 +504,7 @@
                 </ul>
 			</div>
 			<div id="content">
-                <div class="group">
-                    <div class="shortcut" style="left: 0px; top: 0px;" onclick="document.location.href='https://facebook.com/'">
-                        <span class="title">facebook</span>
-                    </div>
-                    <div class="shortcut" style="left: 211px; top: 0px;" onclick="document.location.href='https://vk.com/'">
-                        <span class="title">vk</span>
-                    </div>
-                    <div class="shortcut" style="left: 422px; top: 0px;" onclick="document.location.href='https://youtube.com/'">
-                        <span class="title">youtube</span>
-                    </div>
-                    <div class="shortcut" style="left: 0px; top: 102px;" onclick="document.location.href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference'">
-                        <span class="title">MDN</span>
-                    </div>
-                </div>
+
 			</div>
 			<div id="bottom_bar">
 
