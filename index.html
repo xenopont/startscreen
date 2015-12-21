@@ -233,6 +233,9 @@
                     MARGIN_X = 4,
                     MARGIN_Y = 4,
 
+                    SHORTCUT_BG_OPACITY = 0.75,
+                    SHORTCUT_BG_OPACITY_HOVER = 0.95,
+
                     UNIT_X = 48,
                     UNIT_Y = 48
 
@@ -248,6 +251,10 @@
                         b: b,
                         a: a,
 
+                        setOpacity: function (a) {
+                            this.a = a
+                            return this
+                        },
                         toRgb: function () {
                             return 'rgb(' + r + ', ' + g + ', ' + b + ')'
                         },
@@ -310,15 +317,23 @@
                     var result = xElement({
                         instance: document.createElement('div'),
                         className: 'shortcut',
-                        Color: (properties.hasOwnProperty('color') ? properties.color : randomColor()),
+                        Color: (properties.hasOwnProperty('color') ? properties.color : randomColor()).setOpacity(SHORTCUT_BG_OPACITY),
                         Title: (properties.hasOwnProperty('title') ? properties.title : ''),
                         Url:   (properties.hasOwnProperty('url')   ? properties.url   : '#'),
                         setColor: function (newColor) {
-                            this.Color = newColor
+                            this.Color = color(newColor.r, newColor.g, newColor.b, newColor.a)
                             this.style.backgroundColor = this.Color.toRgba()
                         },
                         'evt-click': function (e) {
                             window.location.href = this.Url
+                        },
+                        'evt-mouseover': function (e) {
+                            this.style.transitionDuration = '200ms'
+                            this.setColor(this.Color.setOpacity(SHORTCUT_BG_OPACITY_HOVER))
+                        },
+                        'evt-mouseout': function (e) {
+                            this.style.transitionDuration = '750ms'
+                            this.setColor(this.Color.setOpacity(SHORTCUT_BG_OPACITY))
                         }
                     })
                     result.appendChild(xElement({
